@@ -1,3 +1,22 @@
+## StyleGAN2 with added function to generate MTD videos
+
+This fork of stylegan2-ada adds a command that generates MTD videos that can be played by the Visual Loop Machine 
+(https://github.com/goolygu/v_machine.) MTD videos are videos with multiple temporal dimensions. Instead of going 
+through a fixed loop it can move in a second temporal dimension based on the volume of the audio. This
+is done by navigating the latent space of stylegan2.
+
+To generate mtd video you need a trained network pkl file and run the following command. 
+
+```.bash
+run_generate_mtdvideo.py generate-mtd-video --network=../trained_networks/{network name}.pkl 
+    --truncation-psi=0.5 --seed=4 --outdir="results/my_mtd_video" --num-waypoints=4 
+```
+Some pretrained networks can be found here: https://www.opensourceagenda.com/projects/awesome-pretrained-stylegan2
+
+Changing the seed will result in different videos. Both network trained on stylegan2 or stylegan2-ada would work.
+
+##The following are the original readme:
+
 ## StyleGAN2 with adaptive discriminator augmentation (ADA)<br>&mdash; Official TensorFlow implementation
 
 ![Teaser image](./docs/stylegan2-ada-teaser-1024x252.png)
