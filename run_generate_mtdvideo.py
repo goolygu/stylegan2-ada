@@ -55,14 +55,15 @@ def generate_mtd_video(
         Gs_kwargs.truncation_psi = truncation_psi
     rnd = np.random.RandomState(seed)
     z_size = Gs.input_shape[1]
-    max_origin_img_dim = max(Gs.output_shape[2:])
-    max_img_dim = min(max_origin_img_dim, max_img_size)
-    img_ratio = max_img_dim / max_origin_img_dim
+    min_origin_img_dim = min(Gs.output_shape[2:])
+    img_dim = min(min_origin_img_dim, max_img_size)
+    img_ratio = img_dim / min_origin_img_dim
 
     img_shape = (
         np.round(np.array(Gs.output_shape[2:]) * img_ratio).astype(int).tolist()
         + Gs.output_shape[1:2]
     )
+
     num_points_dim_0 = num_frames_between_waypoints
     num_points_dim_1 = num_frames_between_waypoints
 
@@ -109,7 +110,9 @@ def generate_mtd_video(
                 z = z_dim_0 + z_diff_dim_1 * k
                 image_list = Gs.run(z, None, **Gs_kwargs)
 
-                image = cv2.resize(image_list[0], img_shape[0:2])
+                image = cv2.resize(image_list[0], img_shape[1::-1])
+
+                image = image[:img_dim, :img_dim, :]
                 if smooth:
                     image = sp.ndimage.filters.gaussian_filter(
                         image, [1, 1, 0], mode="constant"
